@@ -45,7 +45,7 @@
                 <Columns>
                     <asp:TemplateField>
                         <ItemTemplate>
-                            <asp:LinkButton ID="LinkButton1" runat="server" Text='<%#Eval("nomeContato") %>' CommandName="Select" OnClick="LinkButton1_Click">LinkButton</asp:LinkButton>
+                            <asp:LinkButton ID="LinkButton1" runat="server" Text='<%#Eval("nomeContato") %>' CommandName="Select">LinkButton</asp:LinkButton>
                             
                         </ItemTemplate>
                     </asp:TemplateField>
