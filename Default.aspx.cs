@@ -377,6 +377,67 @@ public partial class _Default : System.Web.UI.Page
         testeGridView.DataBind();
     }
 
-   
+
+
+    protected void LinkButton1_Click(object sender, EventArgs e)
+    {
+        LinkButton lnk = (LinkButton)sender;
+        Label1.Text = lnk.Text;
+
+        using (SqlConnection cn = new SqlConnection("Data Source=VAL-PC\\SQLEXPRESS;Initial Catalog=Teste;Integrated Security=True"))
+        {
+            using (SqlCommand cmd = new SqlCommand("Select nomeContato, nascimentoContato, emailPessContato, emailProfContato, telefoneContato, tipoTelefoneContato From Contato where nomeContato = '" + Label1.Text + "'", cn))
+            {
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    nomeTextBox.Text = dr["nomeContato"].ToString();
+                    nascimentoTextBox.Text = dr["nascimentoContato"].ToString();
+                    emailProfTextBox.Text = dr["emailProfContato"].ToString();
+                    emailPessTextBox.Text = dr["emailPessContato"].ToString();
+                    telefoneTextBox.Text = dr["telefoneContato"].ToString();
+                    tipoTelefoneDropDownList.SelectedValue = dr["tipoTelefoneContato"].ToString();
+
+                    cn.Close();
+                }
+            }
         }
+
+    }
+
+    protected void editarButton_Click(object sender, EventArgs e)
+    {
+        using (SqlConnection cn = new SqlConnection("Data Source=VAL-PC\\SQLEXPRESS;Initial Catalog=Teste;Integrated Security=True"))
+        {
+            using (SqlCommand cmd = new SqlCommand("spUpdateContato", cn))
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@nomeContato", nomeTextBox.Text);
+                cmd.Parameters.AddWithValue("@nascimentoContato", Convert.ToDateTime(nascimentoTextBox.Text));
+                cmd.Parameters.AddWithValue("@emailProfContato", emailProfTextBox.Text);
+                cmd.Parameters.AddWithValue("@emailPessContato", emailPessTextBox.Text);
+                cmd.Parameters.AddWithValue("@telefoneContato", telefoneTextBox.Text);
+                cmd.Parameters.AddWithValue("@tipoTelefoneContato", tipoTelefoneDropDownList.SelectedValue);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+
+                nomeTextBox.Text = "";
+                nascimentoTextBox.Text = "";
+                emailProfTextBox.Text = "";
+                emailPessTextBox.Text = "";
+                telefoneTextBox.Text = "";
+                tipoTelefoneDropDownList.SelectedIndex = 0;
+                Response.Redirect("~/Default.aspx");
+
+
+
+            }
+        }
+    }
+}
     
